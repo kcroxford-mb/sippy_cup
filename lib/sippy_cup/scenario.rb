@@ -304,6 +304,123 @@ Content-Length: 0
     end
     alias :send_180 :send_ringing
 
+
+    #
+    # Send a "400" response
+    #
+    # @param [Hash] opts A set of options containing SIPp <recv> element attributes
+    #
+    def send_400(opts = {})
+      msg = <<-MSG
+
+SIP/2.0 400 Bad Request
+[last_Via:]
+From: <sip:[$remote_addr]>;tag=[$remote_tag]
+To: <sip:[$local_addr]>;tag=[call_number]
+[last_Call-ID:]
+[last_CSeq:]
+Server: #{USER_AGENT}
+Contact: <sip:[$local_addr];transport=[transport]>
+Content-Length: 0
+      MSG
+      send msg, opts
+    end
+
+    #
+    # Send a "403" response
+    #
+    # @param [Hash] opts A set of options containing SIPp <recv> element attributes
+    #
+    def send_403(opts = {})
+      msg = <<-MSG
+
+SIP/2.0 403 Forbidden
+[last_Via:]
+From: <sip:[$remote_addr]>;tag=[$remote_tag]
+To: <sip:[$local_addr]>;tag=[call_number]
+[last_Call-ID:]
+[last_CSeq:]
+Server: #{USER_AGENT}
+Contact: <sip:[$local_addr];transport=[transport]>
+Content-Length: 0
+      MSG
+      send msg, opts
+    end
+    #
+    # Send a "403" response
+    #
+    # @param [Hash] opts A set of options containing SIPp <recv> element attributes
+    #
+    def send_404(opts = {})
+      msg = <<-MSG
+
+SIP/2.0 404 Not Found
+[last_Via:]
+From: <sip:[$remote_addr]>;tag=[$remote_tag]
+To: <sip:[$local_addr]>;tag=[call_number]
+[last_Call-ID:]
+[last_CSeq:]
+Server: #{USER_AGENT}
+Contact: <sip:[$local_addr];transport=[transport]>
+Content-Length: 0
+      MSG
+      send msg, opts
+    end
+
+    #
+    # Send a "403" response
+    #
+    # @param [Hash] opts A set of options containing SIPp <recv> element attributes
+    #
+    def send_405(opts = {})
+      msg = <<-MSG
+
+SIP/2.0 405 Method Not Allowed
+[last_Via:]
+From: <sip:[$remote_addr]>;tag=[$remote_tag]
+To: <sip:[$local_addr]>;tag=[call_number]
+[last_Call-ID:]
+[last_CSeq:]
+Server: #{USER_AGENT}
+Contact: <sip:[$local_addr];transport=[transport]>
+Content-Length: 0
+      MSG
+      send msg, opts
+    end
+    def send_408(opts = {})
+      msg = <<-MSG
+
+SIP/2.0 408 Request Timed Out
+[last_Via:]
+From: <sip:[$remote_addr]>;tag=[$remote_tag]
+To: <sip:[$local_addr]>;tag=[call_number]
+[last_Call-ID:]
+[last_CSeq:]
+Server: #{USER_AGENT}
+Contact: <sip:[$local_addr];transport=[transport]>
+Content-Length: 0
+      MSG
+      send msg, opts
+    end
+
+    def send_408(opts = {})
+      msg = <<-MSG
+
+SIP/2.0 408 Request Timed Out
+[last_Via:]
+From: <sip:[$remote_addr]>;tag=[$remote_tag]
+To: <sip:[$local_addr]>;tag=[call_number]
+[last_Call-ID:]
+[last_CSeq:]
+Server: #{USER_AGENT}
+Contact: <sip:[$local_addr];transport=[transport]>
+Content-Length: 0
+      MSG
+      send msg, opts
+    end
+
+
+
     #
     # Answer an incoming call
     #
@@ -583,6 +700,37 @@ Content-Length: 0
     #
     def receive_bye(opts = {})
       recv opts.merge request: 'BYE'
+    end
+    #
+    # Send a CANCEL message
+    #
+    # @param [Hash] opts A set of options to modify the message parameters
+    #
+    def send_cancel(opts = {})
+      msg = <<-MSG
+
+CANCEL sip:[$call_addr] SIP/2.0
+Via: SIP/2.0/[transport] #{@adv_ip}:[local_port];branch=[branch]
+From: <sip:[$local_addr]>;tag=[call_number]
+To: <sip:[$remote_addr]>;tag=[$remote_tag]
+Contact: <sip:[$local_addr];transport=[transport]>
+Call-ID: [call_id]
+CSeq: [cseq] BYE
+Max-Forwards: 100
+User-Agent: #{USER_AGENT}
+Content-Length: 0
+[routes]
+      MSG
+      send msg, opts
+    end
+
+    #
+    # Expect to receive a CANCEL message
+    #
+    # @param [Hash] opts A set of options to modify the expectation
+    #
+    def receive_cancel(opts = {})
+      recv opts.merge request: 'CANCEL'
     end
 
     #
